@@ -39,7 +39,13 @@ If using Visual Studio Code the following tasks will be available
 
 ## Usage
 
+Install `cookiecutter`: [Official Documentation](https://cookiecutter.readthedocs.io/en/latest/installation.html#install-cookiecutter)
+
 Simple create the cookiecutter template in `~/.nuke` or in your `pluginsPath` and import it in your menu.py. The plugin will be available in: Windows -> Custom.
+
+```sh
+cookiecutter https://github.com/sisoe24/nuke-pyside-template
+```
 
 ## Run Local
 
@@ -70,8 +76,3 @@ If invoking `nuke.createNode('Blur')`, the fake `nuke` module must have a functi
 
 Some action could not be faked, but the for the majority it will work. For a code example check here: [ProfileInspector](https://github.com/sisoe24/ProfileInspector/blob/f4320395219c47aaab6c22bed9b0791ec6b911a4/src/_nuke/fake_nuke.py#L22)
 
-## Install `cookiecutter` ([Official Instructions](https://cookiecutter.readthedocs.io/en/latest/installation.html#install-cookiecutter))
-
-```bash
-python3 -m pip install --user cookiecutter
-```
