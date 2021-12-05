@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+#
+# To use this directory as custom hooks path the following command should be used:
+#    `git config core.hooksPath .githooks`
+# Otherwise script needs to go inside `.git/hooks`
+#
+
+# if [[ -n $VIRTUAL_ENV ]]; then
+#     echo 'Running inside a virtual env. Deactivating.'
+#     source "$VIRTUAL_ENV"/bin/activate
+#     deactivate
+# fi
+
+
+# if ! poetry run pytest --cov=src --cov-report=html:coverage --cov-report=xml; then
+#     echo "Python 3 tests failed"
+#     exit 1
+# fi

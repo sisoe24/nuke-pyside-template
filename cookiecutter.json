@@ -1,0 +1,9 @@
+{
+	"project_name": "Nuke PySide2 Template",
+	"project_slug": "{{cookiecutter.project_name|lower|replace(' ', '')}}",
+	"description": "PySide2 template plugin",
+	"author": "Unknown",
+	"author_slug": "{{cookiecutter.author|lower|replace(' ', '')}}",
+	"github_username": "{{cookiecutter.author_slug}}",
+	"email": "{{cookiecutter.author_slug}}@gmail.com"
+}
