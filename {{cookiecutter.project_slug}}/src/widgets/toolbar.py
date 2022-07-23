@@ -54,8 +54,10 @@ class ToolBar(QToolBar):
 
         self.setStyleSheet('color: white;')
 
-        # Add other action here
         self._setup_action(title='About', widget=AboutWidget)
+
+        # Example other toolbar action
+        # self._setup_action(title='Settings', widget=_)
 
     def _setup_action(self, title, widget):
         """Set up action for toolbar.

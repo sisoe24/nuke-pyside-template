@@ -19,15 +19,24 @@ LOGGER.debug('-*- START APPLICATION -*-')
 
 
 class MainWindowWidgets(QWidget):
+    """Main widgets class.
+
+    Here you can create more widgets which are going to be displayed
+    in the main window.
+
+    """
+
     @color_widget
     def __init__(self):
         QWidget.__init__(self)
 
         label = QLabel('Blank Widget')
         label.setStatusTip('This is a label')
+        # my_widget = QPushButton('Click')
 
         _layout = QVBoxLayout()
         _layout.addWidget(label)
+        # _layout.addWidget(my_widget)
 
         self.setLayout(_layout)
 
@@ -35,11 +44,8 @@ class MainWindowWidgets(QWidget):
 class MainWindow(QMainWindow):
     """Custom QMainWindow class.
 
-    A toolbar and a status bar will be added in the main app together with the
-    main widgets.
-
-    If app has an exception loading the main widget, will spawn an ErrorDialog
-    class.
+    The window comes with a toolbar and a status bar. It also spawns an error
+    dialog box if an exception happens when loading the main widgets.
     """
 
     def __init__(self, main_widget=MainWindowWidgets):

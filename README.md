@@ -1,35 +1,22 @@
 # Nuke Pyside2 Template
 
-Python PySide2 cookiecutter template for Nuke.
+A Python PySide2 cookiecutter template for Nuke.
 
 ## Description
 
-Cookiecutter template to create a basic application in PySide2. The application can also be
-run outside Nuke. This is to allow faster development and iteration.
+This project is a cookiecutter template to create a basic application in Nuke with PySide2.
 
 ## Features
 
-- Initial setup for a `QMainWindow` widget.
-- `QToolBar` with a floating dialog to display custom widgets.
-- About widget to display various information about the package.
-- A custom `QMessageBox` used for errors and bug reports.
-- Internal function `color_widget` to quickly color the widget layout.
-- Custom `logging`.
-- Custom `nuke` module.
-- Custom hook for `git pre push`.
-- `pytest` initial setup with some tests and configuration.
-  - `_package` fixture for the package root path.
-  - `_main_ui` fixture for main widget.
-  - `rapidtest` marker.
+The template includes:
 
-If installing dependencies with Poetry the following dependencies will be installed:
-
-- `pytest`
-- `pytest-cov`
-- `pytest-qt`
-- `pytest-randomly`
-- `pytest-repeat`
-- `requests`
+- A ready-to-use QMainWindow with a QToolbar and a QStatusBar.
+  - The toolbar offers an "About" widget with information about the application.
+- A custom QMessageBox for errors and bug reports.
+- A test environment with `pytest` and some sample tests to startup.
+- A wrapper function to color a QWidget for layout testing.
+- A startup logging module.
+- The ability to launch the plugin as a standalone application, i.e., outside Nuke.
 
 If using Visual Studio Code the following tasks will be available
 
@@ -39,40 +26,78 @@ If using Visual Studio Code the following tasks will be available
 
 ## Usage
 
-Install `cookiecutter`: [Official Documentation](https://cookiecutter.readthedocs.io/en/latest/installation.html#install-cookiecutter)
+1. Install `cookiecutter`: [Official Documentation](https://cookiecutter.readthedocs.io/en/latest/installation.html#install-cookiecutter)
+2. Create the cookiecutter template in `~/.nuke` or in your custom path with the following command:
+  
+    ```sh
+    cookiecutter https://github.com/sisoe24/nuke-pyside-template
+    ```
 
-Simple create the cookiecutter template in `~/.nuke` or in your `pluginsPath` and import it in your menu.py. The plugin will be available in: Windows -> Custom.
+3. Import the created package in your `menu.py`.
 
-```sh
-cookiecutter https://github.com/sisoe24/nuke-pyside-template
+You can find the new plugin inside Nuke -> Window -> Custom or you can run the application in [standalone](#run-local).
+
+### Add your widget
+
+You can add new widgets inside the class `src/main.py->MainWindowWidgets`
+
+### Color Widget 
+
+Inside `src/utils` there is a `color_widget.py` module that can be used as a wrapper to randomly color a QWidget. I often use this when I need to visually see the layout of some widgets.
+
+The wrapper only works on an `__init__` method of a QWidget class instance.
+
+```py
+class Widget(QWidget):
+    @color_widget
+    def __init__(self):
+        QWidget.__init__(self)
 ```
 
-## Run Local
+> You can toggle the color state with the vscode command `Toggle UI Color`.
 
-To run the application outside of Nuke, [Poetry](https://python-poetry.org) is used as a package manager to
-install the dependencies.
+## Tests
 
-Poetry assumes that Python3 will be used. If Python3 syntax is avoided, there shouldn't be any problem when using <= Nuke 12. However, if Python2 is preferred, one could change the python version in the _pyproject.toml_ or use the requirements.txt to install the base dependencies.
+Some sample tests are already included using `pytest`.
 
-> When using Python2 inside pyproject.toml there may be some dependencies issues due to version restrictions.
+### Fixtures
 
-Once the dependencies have been installed:
+- `_main_ui`: which initializes the main UI.
+- `_package`: the package root directory.
 
+### Markers
+
+- `_rapidtest`
+
+## Git-Hooks
+
+There is an inactive git hook inside `.githook` which uses `poetry` to run the tests before a push.
+
+To use the hook you can:
+
+1. Comment the code
+2. Move the hook inside `.git/hooks` or enable `.githooks` as a folder with `git config core.hooksPath .githooks`
+
+## Run Standalone
+
+To run the application outside Nuke, you must install the package dependencies. You can do so with the `pyproject.toml` or the `requirements.txt`.
+
+Note that `pyproject.toml` assumes you will use Python 3.
+
+I am using `poetry` as the package manager for this example:
+
+- `poetry install`: install dependency
 - `poetry run python -m src.run_local`: to run the app.
 - `poetry run pytest`: to test the app.
 
-## Custom `nuke` module
+### How it works
 
-If invoking a `nuke` command outside Nuke will obviously throw an exception.
+I decided to go about this by creating a fake nuke module inside my directory. In this way, I can import nuke outside Nuke with no errors.
 
-Although limited in some regards, in order to run the application outside Nuke, a "fake" `nuke` module must be created. This allows the application to successfully import `nuke` as a package and search inside for the method invoked.
+So let's say, for example, your application uses the `nuke.getFilename` function. Launching the application in standalone mode and executing that piece of code will throw an error.
 
-This requires the user to write its own version of the `nuke` method called. The method
-could be implemented just as a placeholder and does not require an exact copy of the builtin module.
+With the fake nuke module, you can create your version of the `nuke.getFilename` (e.g., creating a QFileDialog). This way, you keep your code the same but run the application in standalone mode.
 
-Example:
+This will require some extra code sometimes, but it gives you much freedom regarding rapid prototyping and testing.
 
-If invoking `nuke.createNode('Blur')`, the fake `nuke` module must have a function named `createNode(arg)`. The return of the function depends on the application requirements. It could be a string placeholder or a custom `Node` class with some methods.
-
-Some action could not be faked, but the for the majority it will work. For a code example check here: [ProfileInspector](https://github.com/sisoe24/ProfileInspector/blob/f4320395219c47aaab6c22bed9b0791ec6b911a4/src/_nuke/fake_nuke.py#L22)
-
+For an example check here: [ProfileInspector](https://github.com/sisoe24/ProfileInspector/blob/f4320395219c47aaab6c22bed9b0791ec6b911a4/src/_nuke/fake_nuke.py#L22)
